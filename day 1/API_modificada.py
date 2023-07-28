@@ -194,8 +194,8 @@ class XTB:
         return result+"\n"
 
 if __name__ == '__main__':
-    user = '14636280'
-    password = 'Cochino24$87'
+    user = ''
+    password = ''
     API = XTB(user, password)
 
     # divisas que se quieren analizar
