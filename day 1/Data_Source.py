@@ -1,4 +1,4 @@
-# pip install azure-storage-file-datalake azure-identity
+# pip -m install azure-storage-file-datalake azure-identity
 
 import os
 from azure.storage.filedatalake import (
@@ -16,16 +16,12 @@ class Azure_Manipulation:
         service_client = DataLakeServiceClient(account_url, credential=sas_token)
 
         return service_client
+
+    def create_file_system(self, service_client: DataLakeServiceClient, file_system_name: str) -> FileSystemClient:
+        file_system_client = service_client.create_file_system(file_system=file_system_name)
+
+        return file_system_client
     
-    def append_data_to_file(self, directory_client: DataLakeDirectoryClient, file_name: str):
-        file_client = directory_client.get_file_client(file_name)
-        file_size = file_client.get_file_properties().size
-        
-        data = b"Data to append to end of file"
-        file_client.append_data(data, offset=file_size, length=len(data))
-
-        file_client.flush_data(file_size + len(data))
-
     def list_directory_contents(self, file_system_client: FileSystemClient, directory_name: str):
         paths = file_system_client.get_paths(path=directory_name)
 
@@ -43,12 +39,14 @@ class Azure_Manipulation:
 if __name__ == '__main__':
     # StoreAccount = "safactoreddatathon"
     SAS_Token = "sp=r&st=2023-07-21T22:27:46Z&se=2023-08-19T06:27:46Z&sv=2022-11-02&sr=c&sig=VF6y7LwGSmTHpKbOwGhy6DKUxn5HYZTK4wuvA22Q%2FWI%3D'"
-    SAS_URL =   "https://safactoreddatathon.blob.core.windows.net/source-files?sp=r&st=2023-07-21T22:27:46Z&se=2023-08-19T06:27:46Z&sv=2022-11-02&sr=c&sig=VF6y7LwGSmTHpKbOwGhy6DKUxn5HYZTK4wuvA22Q%2FWI%3D"
+    SAS_URL = "https://safactoreddatathon.blob.core.windows.net/source-files?sp=r&st=2023-07-21T22:27:46Z&se=2023-08-19T06:27:46Z&sv=2022-11-02&sr=c&sig=VF6y7LwGSmTHpKbOwGhy6DKUxn5HYZTK4wuvA22Q%2FWI%3D"
+    object1 = "source-fies/amazon_metadata"
+    object2 = "source-files/amazon_reviews"
 
     AM = Azure_Manipulation()
 
     AM.get_service_client_sas(SAS_Token,SAS_URL)
-    # AM.list_directory_contents()
+    
 
 
 
